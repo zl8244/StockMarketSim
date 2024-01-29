@@ -11,14 +11,10 @@ public class Woolie extends Thread{
         this.city = city;
     }
 
-    private synchronized void cross(int currentTime) {
+    private void cross(int currentTime) {
         try {
             Thread.sleep(1000);
-            if(currentTime == time) {
-                System.out.println("" + name + " leaves at " + city + ".");
-            } else {
-                System.out.println('\t' + name + '\s' + currentTime + " seconds.");
-            }
+            System.out.println('\t' + name + '\s' + currentTime + " seconds.");
         } catch (InterruptedException e) {
         }
     }
@@ -31,5 +27,6 @@ public class Woolie extends Thread{
             counter++;
             cross(counter);
         }
+        System.out.println("" + name + " leaves at " + city + ".");
     }
 }
