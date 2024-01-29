@@ -11,26 +11,33 @@ public class Woolie extends Thread{
         this.city = city;
     }
 
+    private synchronized void cross(int currentTime) {
+        try {
+            Thread.sleep(1000);
+            if(currentTime == time) {
+                System.out.println("" + name + " leaves at " + city + ".");
+            } else {
+                System.out.println('\t' + name + '\s' + currentTime + " seconds.");
+            }
+        } catch (InterruptedException e) {
+        }
+    }
+
     public void run() {
         System.out.println("" + name + " has arrived at the bridge.");
+        System.out.println("" + name + " is starting to cross.");
         int counter = 0;
         while(counter < time) {
-            if(counter == 0) {
-                System.out.println("" + name + " is starting to cross.");
-            } else {
-                System.out.println('\t' + name + '\s' + counter + " seconds.");
-            }
             counter++;
-            Thread.yield();
+            cross(counter);
         }
-        System.out.println("" + name + " leaves at " + city + ".");
     }
 
     public static void main(String[] args) {
-        Woolie w1 = new Woolie("tester1", 10, "Merctan");
-        Woolie w2 = new Woolie("tester2", 10, "Sictine");
-        Woolie w3 = new Woolie("tester3", 15, "Merctan");
-        Woolie w4 = new Woolie("tester4", 20, "Sictine");
+        Woolie w1 = new Woolie("tester1", 5, "Merctan");
+        Woolie w2 = new Woolie("tester2", 5, "Sictine");
+        Woolie w3 = new Woolie("tester3", 10, "Merctan");
+        Woolie w4 = new Woolie("tester4", 17, "Sictine");
         w1.start();
         w2.start();
         w3.start();
