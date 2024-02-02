@@ -3,13 +3,9 @@ package activity_3;
 public class Bridge {
 
     private int num;
-
-    private synchronized int getNum() {
-        return num;
-    }
     
     public synchronized void enterBridge() {
-        if(getNum() != 0) {
+        if(num == 1) {
             try {
                 wait();
             } catch (InterruptedException e) {

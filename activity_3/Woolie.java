@@ -30,7 +30,7 @@ public class Woolie extends Thread{
             counter++;
             cross(counter);
         }
-        bridge.leaveBridge();
         System.out.println("" + name + " leaves at " + city + ".");
+        bridge.leaveBridge();
     }
 }
