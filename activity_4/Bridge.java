@@ -2,21 +2,23 @@ package activity_4;
 
 public class Bridge {
 
-    private int num;
+    private volatile int num;
     
     public synchronized void enterBridge() {
-        if(num == 3) {
+        while(num == 3) {
             try {
                 wait();
             } catch (InterruptedException e) {
             }
-        } else {
-            num++;
         }
+        num++;
+        notifyAll();
     }
 
     public synchronized void leaveBridge() {
-        num--;
+        if(num > 0) {
+            num--;
+        }
         notifyAll();
     }
 }
