@@ -2,8 +2,8 @@ package activity_5;
 
 public class Philosopher extends Thread{
     private final int id;
-    private final Fork left;
-    private final Fork right;
+    private volatile Fork left;
+    private volatile Fork right;
     private final boolean rHanded;
     private final int nTimes;
     private final long thinkMillis;
@@ -19,7 +19,7 @@ public class Philosopher extends Thread{
         this.eatMillis = eatMillis;
     }
 
-    private synchronized void runHelper() {
+    private void runHelper() {
         int thinkTime = (int)(Math.random() * (thinkMillis+1));
         System.out.println("Philosopher " + id + " thinks for " + thinkTime + " time units.");
         try {
@@ -48,13 +48,10 @@ public class Philosopher extends Thread{
             Thread.sleep(eatTime*1000);
         } catch (InterruptedException e) {
         }
-        if(rHanded) {
-            System.out.println("Philosopher " + id + " releases right fork.");
-            right.release();
-        } else {
-            System.out.println("Philosopher " + id + " releases left fork.");
-            left.release();
-        }
+        System.out.println("Philosopher " + id + " releases right fork.");
+        right.release();
+        System.out.println("Philosopher " + id + " releases left fork.");
+        left.release();
     }
     
     public void run() {

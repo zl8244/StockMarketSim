@@ -5,14 +5,13 @@ public class Fork implements IFork{
     private volatile boolean isInUse = false;
     
     public synchronized void acquire() {
-        if(isInUse) {
+        while(isInUse) {
             try {
                 wait();
             } catch (InterruptedException e) {
             }
-        } else {
-            isInUse = true;
         }
+        isInUse = true;
     }
 
     public synchronized void release() {
