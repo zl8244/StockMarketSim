@@ -38,12 +38,12 @@ public class Driver {
         Philosopher[] philosophers = new Philosopher[np];
         for (int i = 0; i < np; i++) {
             if(!minusL) {
-                philosophers[i] = new Philosopher(i+1, forks[(np+i+1)%np], forks[i], true, nt, tm, em);
+                philosophers[i] = new Philosopher(i+1, forks[(np+i-1)%np], forks[i], true, nt, tm, em);
             } else {
                 if((i+1)%2 == 0) {
-                    philosophers[i] = new Philosopher(i+1, forks[(np+i+1)%np], forks[i], true, nt, tm, em);
+                    philosophers[i] = new Philosopher(i+1, forks[(np+i-1)%np], forks[i], true, nt, tm, em);
                 } else {
-                    philosophers[i] = new Philosopher(i+1, forks[(np+i+1)%np], forks[i], false, nt, tm, em);
+                    philosophers[i] = new Philosopher(i+1, forks[(np+i-1)%np], forks[i], false, nt, tm, em);
                 }
             }
         }
