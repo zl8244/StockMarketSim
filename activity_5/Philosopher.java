@@ -23,7 +23,7 @@ public class Philosopher extends Thread{
         int thinkTime = (int)(Math.random() * (thinkMillis+1));
         System.out.println("Philosopher " + id + " thinks for " + thinkTime + " time units.");
         try {
-            Thread.sleep(thinkTime*1000);
+            Thread.sleep(thinkTime);
         } catch (InterruptedException e) {
         }
         if(rHanded) {
@@ -45,7 +45,7 @@ public class Philosopher extends Thread{
         int eatTime = (int)(Math.random() * (eatMillis+1));
         System.out.println("Philosopher " + id + " eats for " + eatTime + " time units.");
         try {
-            Thread.sleep(eatTime*1000);
+            Thread.sleep(eatTime);
         } catch (InterruptedException e) {
         }
         System.out.println("Philosopher " + id + " releases right fork.");
