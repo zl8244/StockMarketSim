@@ -6,6 +6,8 @@ public class Philosopher extends Thread{
     private volatile Fork right;
     private final boolean rHanded;
     private final int nTimes;
+    
+    // These are in milliseconds
     private final long thinkMillis;
     private final long eatMillis;
 

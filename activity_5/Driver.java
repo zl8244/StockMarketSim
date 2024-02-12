@@ -5,8 +5,10 @@ public class Driver {
     private static boolean minusL = false;
     private static int np;
     private static int nt;
-    private static int tm;
-    private static int em;
+    
+    // These are in milliseconds
+    private static long tm;
+    private static long em;
 
     private static String argsHelper(String[] args, int index, String defaultValue) {
         if(args.length > index) {
@@ -23,13 +25,13 @@ public class Driver {
         if(minusL){
             np = Integer.parseInt(argsHelper(args, 1, "4"));
             nt = Integer.parseInt(argsHelper(args, 2, "10"));
-            tm = Integer.parseInt(argsHelper(args, 3, "0"));
-            em = Integer.parseInt(argsHelper(args, 4, "0"));
+            tm = Long.parseLong(argsHelper(args, 3, "0"));
+            em = Long.parseLong(argsHelper(args, 4, "0"));
         } else {
             np = Integer.parseInt(argsHelper(args, 0, "4"));
             nt = Integer.parseInt(argsHelper(args, 1, "10"));
-            tm = Integer.parseInt(argsHelper(args, 2, "0"));
-            em = Integer.parseInt(argsHelper(args, 3, "0"));
+            tm = Long.parseLong(argsHelper(args, 2, "0"));
+            em = Long.parseLong(argsHelper(args, 3, "0"));
         }
         Fork[] forks = new Fork[np];
         for(int i = 0; i < np; i++) {
