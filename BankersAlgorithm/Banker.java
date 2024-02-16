@@ -1,6 +1,7 @@
 package BankersAlgorithm;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 
 public class Banker {
@@ -9,7 +10,6 @@ public class Banker {
     private volatile int resourceLeft;
     private Map<Thread, Integer> claims;
     private Map<Thread, Integer> loans;
-    private Map<Map<Thread, Integer>, Map<Thread, Integer>> banks;
 
     public Banker(int nUnits) {
         totalResources = nUnits;
@@ -30,6 +30,16 @@ public class Banker {
             System.exit(1);
         }
         System.out.println("Thread " + Thread.currentThread().getName() + " requests " + nUnits + " units.");
+        Integer[] claimArray = claims.values().toArray(Integer[]::new);
+        Integer[] loanArray = loans.values().toArray(Integer[]::new);
+
+        // array[i][0] = total claim
+        // array[i][1] = remaining claim
+        int[][] loanAndRemain = new int[claims.size()][2];
+        for(int i = 0; i < loanAndRemain.length; i++) {
+            loanAndRemain[i][0] = loanArray[i];
+            loanAndRemain[i][1] = claimArray[i] - loanArray[i];
+        }
         return false;
     }
 
