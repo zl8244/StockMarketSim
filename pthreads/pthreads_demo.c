@@ -19,17 +19,35 @@
 #include <assert.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <string.h>
 
 #define NUM_THREADS (5)
+
+int reverse = 1;
+
+static void *spin_loop( int seconds )
+{
+	int i;
+	u_int64_t time = (seconds * 1000) * 80000000;
+	while(i < time) {
+		i++;
+	}
+	return NULL;
+}
 
 static void *perform_work( void *arguments )
 {
   int index = *((int *)arguments);
-  int sleep_time = 1 + rand() % NUM_THREADS;
-
+  int sleep_time; 
+  if(reverse == 0) {
+	  sleep_time = 1 * (2 * (5 - NUM_THREADS));
+  }
+  else {
+	  sleep_time = 1 + (2 * NUM_THREADS);
+  }
   printf("THREAD %d: Started.\n", index);
   printf("THREAD %d: Will be sleeping for %d seconds.\n", index, sleep_time);
-  sleep(sleep_time);
+  spin_loop(sleep_time);
   printf("THREAD %d: Ended.\n", index);
 
   return NULL;
@@ -41,6 +59,11 @@ int main( int arg_count, char *arg_strings[] )
   int thread_args[NUM_THREADS];
   int i;
   int result_code;
+  char reverseCmd[] = "reverse";
+
+  if(arg_count > 1) {
+	reverse = strcmp(reverseCmd, arg_strings[1]);
+  }
   
   //create all threads one by one
   for (i = 0; i < NUM_THREADS; i++) {
