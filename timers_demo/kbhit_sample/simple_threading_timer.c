@@ -74,14 +74,15 @@ int main()
     }
 
     printf("Press ENTER Key to Exit\n");
-    while( 1 )
+    while( getchar() != '\n' )
 	{
-//		for ( int i = 0 ; i < 100000 ; i++ )
-//			;
+		for ( int i = 0 ; i < 100000 ; i++ )
+			;
 		if ( kbhit() )
 			if ( getchar() == '\n' )
 				break ;
 	}
+    timer_delete(timerId);
     return 0;
 }
 
