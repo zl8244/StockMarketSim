@@ -34,6 +34,9 @@ public class Driver {
         return (double) tmp / factor;
     }
 
+    /**
+     * Helper method to handle the user input for setting parameters
+     */
     private static void handleUserInput() {
         Scanner scan = new Scanner(System.in);
         String input = "";
@@ -75,6 +78,8 @@ public class Driver {
 
     public static void main(String[] args) {
         handleUserInput();
+
+        // Create the Stocks
         Stock[] stocks = new Stock[numStock];
         for(int i = 0; i < numStock; i++) {
             double randomValue = (Math.random() * (maxInitialStockValue-minInitialStockValue))+minInitialStockValue;
@@ -84,7 +89,10 @@ public class Driver {
         for (Stock stock : stocks) {
             System.out.println("Stock created with " + stock.getValue());
         }
+
         StockMarket stockMarket = new StockMarket(stocks);
+
+        // Create the Investors
         Investor[] investors = new Investor[numInvestors];
         for(int i = 0; i < numInvestors; i++) {
             String name = "Investor " + (i+1);

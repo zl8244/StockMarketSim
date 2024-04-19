@@ -39,7 +39,7 @@ public class Stock {
     /**
      * Helper method to handle how each Stock increases in value
      */
-    private void addValue() {
+    private synchronized void addValue() {
         double temp = (double)(value * Math.random());
         value += round(temp);
     }
@@ -47,7 +47,7 @@ public class Stock {
     /**
      * Helper method to handle how each Stock decreases in value
      */
-    private void subValue() {
+    private synchronized void subValue() {
         double temp = (double)(value * Math.random());
         value -= round(temp);
     }
@@ -56,11 +56,12 @@ public class Stock {
      * Handles how each Stock will change its value at the end of each turn
      */
     public synchronized void changeValue() {
-        int random = (int)(Math.random()*101);
+        int random = (int)(Math.random()*100) + 1;
         if(random < 50) {
             subValue();
-            if(value < 0) {
-                value = 0;
+            // Stock value has a hard minimum limit of 1
+            if(value <= 0) {
+                value = 1;
             }
         } else {
             addValue();
@@ -71,7 +72,7 @@ public class Stock {
      * Returns the value of the Stock
      * @return the value of the Stock
      */
-    public double getValue() {
+    public synchronized double getValue() {
         return value;
     }
 
@@ -79,14 +80,14 @@ public class Stock {
      * Returns the number of interactions left to the Stock
      * @return
      */
-    public int getNumSlots() {
+    public synchronized int getNumSlots() {
         return numSlots;
     }
 
     /**
      * Process investors interacting with Stock
      */
-    public void stockBusy() {
+    public synchronized void stockBusy() {
         queue.add(Thread.currentThread());
         while(investorsAt == numSlots || !Thread.currentThread().equals(queue.getFirst())) {
             try {
@@ -101,7 +102,7 @@ public class Stock {
     /**
      * Open a slot for investors to interact with Stock
      */
-    public void stockRelease() {
+    public synchronized void stockRelease() {
         if(investorsAt > 0) {
             investorsAt--;
         }
