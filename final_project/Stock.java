@@ -8,7 +8,7 @@ public class Stock {
     private volatile double value;
 
     /** Number of Investors that can interact with Stock at any given time */
-    private final int numSlots = 3;
+    private final int numSlots = 2;
 
     /** Number of Investors that are currently interacting with the Stock */
     private volatile int investorsAt = 0;

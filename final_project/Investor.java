@@ -1,5 +1,6 @@
 package final_project;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Investor extends Thread{
@@ -71,6 +72,11 @@ public class Investor extends Thread{
          * 3) Repeat Step 2 until investor exhausts budget
          * 4) Wait for all Stocks to change value then repeat until moneyGoal has been reached
          */
-        System.out.println(getName() + " created with " + money);
+        System.out.println(getName() + " created with " + money + " and a goal of " + moneyGoal);
+        ArrayList<Stock> stocksInBudget = stockMarket.findStocks(budget);
+        System.out.println(getName() + " Budget: " + budget);
+        for (Stock stock : stocksInBudget) {
+            System.out.println(getName() + " Stock: " + stock.getValue());
+        }
     }
 }
