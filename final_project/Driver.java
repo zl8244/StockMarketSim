@@ -46,32 +46,44 @@ public class Driver {
         // Handles how many stock will be generated
         System.out.print("How many stocks are part of this stock market: ");
         input = scan.nextLine();
-        numStock = Integer.parseInt(input);
-
+        if(!input.equals("")) {
+            numStock = Integer.parseInt(input);
+        }
+        
         // Handles how many investors will be generated
         System.out.print("How many investors are in this stock market: ");
         input = scan.nextLine();
-        numInvestors = Integer.parseInt(input);
+        if(!input.equals("")) {
+            numInvestors = Integer.parseInt(input);
+        }
 
         // Handles the lower bound of value for each stock
         System.out.print("What is the minimum value all stocks should be initialized with: ");
         input = scan.nextLine();
-        minInitialStockValue = Double.parseDouble(input);
+        if(!input.equals("")) {
+            minInitialStockValue = Double.parseDouble(input);
+        }
 
         // Handles the upper bound of value for each stock
         System.out.print("What is the maximum value all stocks should be initialized with: ");
         input = scan.nextLine();
-        maxInitialStockValue = Double.parseDouble(input);
+        if(!input.equals("")) {
+            maxInitialStockValue = Double.parseDouble(input);
+        }
 
         // Handles the lower bound of money for each investor
         System.out.print("What is the minimum money each investor should be initialized with: ");
         input = scan.nextLine();
-        minMoney = Double.parseDouble(input);
+        if(!input.equals("")) {
+            minMoney = Double.parseDouble(input);
+        }
 
         // Handles the upper bound of money for each investor
         System.out.print("What is the maximum money each investor should be initizlized with: ");
         input = scan.nextLine();
-        maxMoney = Double.parseDouble(input);
+        if(!input.equals("")) {
+            maxMoney = Double.parseDouble(input);
+        }
 
         scan.close();
     }
@@ -102,6 +114,12 @@ public class Driver {
         }
         for (Investor investor : investors) {
             investor.start();
+        }
+        for (Investor investor : investors) {
+            try {
+                investor.join();
+            } catch (InterruptedException e) {
+            }
         }
     }
 }
