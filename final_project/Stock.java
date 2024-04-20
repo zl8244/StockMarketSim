@@ -40,22 +40,24 @@ public class Stock {
      * Helper method to handle how each Stock increases in value
      */
     private synchronized void addValue() {
-        double temp = (double)(value * Math.random());
-        value += round(temp);
+        double temp = value * Math.random();
+        value = round(value + temp);
     }
 
     /**
      * Helper method to handle how each Stock decreases in value
      */
     private synchronized void subValue() {
-        double temp = (double)(value * Math.random());
-        value -= round(temp);
+        double temp = value * Math.random();
+        value = round(value - temp);
     }
 
     /**
      * Handles how each Stock will change its value at the end of each turn
      */
     public synchronized void changeValue() {
+        System.out.println("Stock is changing");
+        System.out.println("Originally: " + value);
         int random = (int)(Math.random()*100) + 1;
         if(random < 50) {
             subValue();
@@ -66,6 +68,7 @@ public class Stock {
         } else {
             addValue();
         }
+        System.out.println("Now: " + value);
     }
 
     /**
@@ -87,10 +90,11 @@ public class Stock {
     /**
      * Process investors interacting with Stock
      */
-    public synchronized void stockBusy() {
+    public synchronized void interactWithStock() {
         queue.add(Thread.currentThread());
         while(investorsAt == numSlots || !Thread.currentThread().equals(queue.getFirst())) {
             try {
+                System.out.println(Thread.currentThread().getName() + " waits");
                 wait();
             } catch (InterruptedException e) {
             }

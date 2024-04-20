@@ -102,7 +102,9 @@ public class Driver {
             System.out.println("Stock created with " + stock.getValue());
         }
 
+        
         StockMarket stockMarket = new StockMarket(stocks);
+        Round round = new Round(stockMarket);
 
         // Create the Investors
         Investor[] investors = new Investor[numInvestors];
@@ -110,7 +112,7 @@ public class Driver {
             String name = "Investor " + (i+1);
             double randomValue = (Math.random() * (maxMoney-minMoney))+minMoney;
             randomValue = round(randomValue);
-            investors[i] = new Investor(name, randomValue, stockMarket);
+            investors[i] = new Investor(name, randomValue, stockMarket, round);
         }
         for (Investor investor : investors) {
             investor.start();

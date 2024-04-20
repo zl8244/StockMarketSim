@@ -17,6 +17,8 @@ public class Investor extends Thread{
     /** Stock Market reference for commands like buying and selling */
     private final StockMarket stockMarket;
 
+    private final Round round;
+
     /**
      * A hashmap of stocks bought
      * @Key Stock
@@ -31,12 +33,16 @@ public class Investor extends Thread{
      */
     private final HashMap<Stock, Double> costPerStock = new HashMap<>();
 
-    public Investor(String name, double money, StockMarket stockMarket) {
+    /** A list of stocks that are within budget */
+    private volatile ArrayList<Stock> stocksInBudget = new ArrayList<>();
+
+    public Investor(String name, double money, StockMarket stockMarket, Round round) {
         setName(name);
         this.money = money;
         moneyGoal = money*2;
         budget = round(money/2);
         this.stockMarket = stockMarket;
+        this.round = round;
     }
 
     /**
@@ -60,6 +66,7 @@ public class Investor extends Thread{
     }
 
     public void run() {
+        round.addInvestors();
         /*
          * 1) Look through costPerStock and compare the price investor bought stock for against the current value of the stock
          *   a) If the current value of the stock is greater than the price stored, investor sells
@@ -71,9 +78,23 @@ public class Investor extends Thread{
          *   b) If the Stock is busy wait until Stock has space
          * 3) Repeat Step 2 until investor exhausts budget
          * 4) Wait for all Stocks to change value then repeat until moneyGoal has been reached
+         *   a) do - while(money < moneyGoal)
          */
         System.out.println(getName() + " created with " + money + " and a goal of " + moneyGoal);
-        ArrayList<Stock> stocksInBudget = stockMarket.findStocks(budget);
+        ArrayList<Stock> stocksInBudget = new ArrayList<>();
+        stocksInBudget = stockMarket.findStocks(budget);
+        System.out.println(getName() + " Budget: " + budget);
+        for (Stock stock : stocksInBudget) {
+            System.out.println(getName() + " Stock: " + stock.getValue());
+        }
+        // ...
+
+        round.investorFinished();
+        round.endRound();
+        stocksInBudget.clear();
+
+        // loop starts again
+        stocksInBudget = stockMarket.findStocks(budget);
         System.out.println(getName() + " Budget: " + budget);
         for (Stock stock : stocksInBudget) {
             System.out.println(getName() + " Stock: " + stock.getValue());

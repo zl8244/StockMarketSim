@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class StockMarket {
 
     private Stock[] stocks;
+    private volatile boolean turnEnd = false;
 
     public StockMarket(Stock[] stocks) {
         this.stocks = stocks;
@@ -25,11 +26,25 @@ public class StockMarket {
         return stocksInBudget;
     }
 
-    public void buyStock(Stock s) {
+    public synchronized void buyStock(Stock s) {
         //do something
     }
 
-    public void sellStock(Stock s) {
+    public synchronized void sellStock(Stock s) {
         //do something
+    }
+
+    public synchronized void resetTurnEnd() {
+        if(turnEnd) {
+            System.out.println("boolean reset");
+            turnEnd = false;
+        }
+    }
+
+    public synchronized void endRound() {
+        System.out.println("End of round!");
+        for (Stock stock : stocks) {
+            stock.changeValue();
+        }
     }
 }
