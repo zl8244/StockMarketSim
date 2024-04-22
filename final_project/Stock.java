@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 public class Stock {
 
+    private final String name;
+
     /** Cost of the Stock object */
     private volatile double value;
 
@@ -20,7 +22,8 @@ public class Stock {
      * Constructs a Stock object with an starting value
      * @param initialValue the starting value of the Stock
      */
-    public Stock(double initialValue) {
+    public Stock(String name, double initialValue) {
+        this.name = name;
         value = initialValue;
     }
 
@@ -56,19 +59,16 @@ public class Stock {
      * Handles how each Stock will change its value at the end of each turn
      */
     public synchronized void changeValue() {
-        System.out.println("Stock is changing");
-        System.out.println("Originally: " + value);
         int random = (int)(Math.random()*100) + 1;
         if(random < 50) {
             subValue();
             // Stock value has a hard minimum limit of 1
-            if(value <= 0) {
+            if(value <= 1) {
                 value = 1;
             }
         } else {
             addValue();
         }
-        System.out.println("Now: " + value);
     }
 
     /**
@@ -94,10 +94,11 @@ public class Stock {
         queue.add(Thread.currentThread());
         while(investorsAt == numSlots || !Thread.currentThread().equals(queue.getFirst())) {
             try {
-                System.out.println(Thread.currentThread().getName() + " waits");
+                System.out.println(Thread.currentThread().getName() + " waits...");
                 wait();
             } catch (InterruptedException e) {
             }
+            System.out.println(Thread.currentThread().getName() + " awakens!");
         }
         investorsAt++;
         queue.removeFirst();
@@ -111,5 +112,9 @@ public class Stock {
             investorsAt--;
         }
         notifyAll();
+    }
+
+    public String getName() {
+        return name;
     }
 }

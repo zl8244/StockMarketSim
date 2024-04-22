@@ -8,7 +8,7 @@ public class Driver {
     private static int numStock = 2;
 
     /** Number of Investors to be generated */
-    private static int numInvestors = 2;
+    private static int numInvestors = 3;
 
     /** Minimum value that Stocks should be initialized with */
     private static double minInitialStockValue = 10;
@@ -94,12 +94,13 @@ public class Driver {
         // Create the Stocks
         Stock[] stocks = new Stock[numStock];
         for(int i = 0; i < numStock; i++) {
+            String name = "Stock " + (i+1);
             double randomValue = (Math.random() * (maxInitialStockValue-minInitialStockValue))+minInitialStockValue;
             randomValue = round(randomValue);
-            stocks[i] = new Stock(randomValue);
+            stocks[i] = new Stock(name, randomValue);
         }
         for (Stock stock : stocks) {
-            System.out.println("Stock created with " + stock.getValue());
+            System.out.println("Stock created with $" + stock.getValue());
         }
 
         

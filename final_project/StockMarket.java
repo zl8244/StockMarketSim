@@ -26,14 +26,6 @@ public class StockMarket {
         return stocksInBudget;
     }
 
-    public synchronized void buyStock(Stock s) {
-        //do something
-    }
-
-    public synchronized void sellStock(Stock s) {
-        //do something
-    }
-
     public synchronized void resetTurnEnd() {
         if(turnEnd) {
             System.out.println("boolean reset");
@@ -42,7 +34,6 @@ public class StockMarket {
     }
 
     public synchronized void endRound() {
-        System.out.println("End of round!");
         for (Stock stock : stocks) {
             stock.changeValue();
         }

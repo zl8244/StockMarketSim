@@ -1,6 +1,5 @@
 package final_project;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -13,7 +12,7 @@ public class Round {
         this.stockMarket = stockMarket;
     }
     
-    public synchronized void addInvestors() {
+    public synchronized void addInvestor() {
         investors.put(Thread.currentThread(), 0);
     }
 

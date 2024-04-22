@@ -17,6 +17,7 @@ public class Investor extends Thread{
     /** Stock Market reference for commands like buying and selling */
     private final StockMarket stockMarket;
 
+    /** Round reference for round handling */
     private final Round round;
 
     /**
@@ -57,47 +58,105 @@ public class Investor extends Thread{
         return (double) tmp / factor;
     }
 
-    public void buyStock(Stock s) {
-        //add stock to boughtStocks and costPerStock
+    /**
+     * Buy one unit of Stock s
+     * @param s the Stock to be bought
+     */
+    public synchronized void buyStock(Stock s) {
+
+        int numStock = (int)(budget/s.getValue());
+
+        // Simulate interacting with Stock
+        s.interactWithStock();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+
+        // Remove the money from the Investor
+        System.out.println(getName() + " buys " + numStock + " of " + s.getName() + " for a total of $" + round(s.getValue()*numStock) + "!");
+        money -= round(s.getValue()*numStock);
+        budget -= round(s.getValue()*numStock);
+
+        // if the key exists, we already own some of the stock
+        // otherwise we don't own any
+        if(costPerStock.containsKey(s) && boughtStocks.containsKey(s)) {
+            double tempAvgCost = costPerStock.get(s);
+            int tempNum = boughtStocks.get(s);
+            int newNum = tempNum + numStock;
+            double newAvgCost = round(((tempAvgCost * tempNum) + (s.getValue()*numStock)) / newNum);
+            
+            // Update the values about the owned Stock
+            costPerStock.replace(s, newAvgCost);
+            boughtStocks.replace(s, newNum);
+        } else {
+            // Add the Stock so it is now owned
+            costPerStock.put(s, s.getValue());
+            boughtStocks.put(s, numStock);
+        }
+
+        // Done interacting with Stock
+        s.stockRelease();
     }
 
-    public void sellStock(Stock s) {
-        //remove stock from boughtStocks and costPerStock
+    /**
+     * Sell all owned Stock s
+     * @param s the Stock to be sold
+     */
+    public synchronized void sellStock(Stock s) {
+        // Get the number of Stock we own
+        int numStocks = boughtStocks.get(s);
+
+        // Simulate interacting with the Stock
+        s.interactWithStock();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+
+        // Add the money to the Investor
+        System.out.println(getName() + " sells " + numStocks + " of " + s.getName() + " for a total of $" + round(s.getValue()*numStocks));
+        money += s.getValue() * numStocks;
+
+        // Remove the Stock from the Investor
+        boughtStocks.remove(s);
+        costPerStock.remove(s);
+
+        // Investor now done interacting with Stock
+        s.stockRelease();
     }
 
     public void run() {
-        round.addInvestors();
-        /*
-         * 1) Look through costPerStock and compare the price investor bought stock for against the current value of the stock
-         *   a) If the current value of the stock is greater than the price stored, investor sells
-         *     a1) Get the number of the stock investor has by looking through boughtStocks
-         *     a2) Sell all of it
-         *   b) If the Stock is busy wait until Stock has space
-         * 2) Look through all stocks listed by stock market
-         *   a) If there exists a stock that fits within the investor's budget, buy as much as they can
-         *   b) If the Stock is busy wait until Stock has space
-         * 3) Repeat Step 2 until investor exhausts budget
-         * 4) Wait for all Stocks to change value then repeat until moneyGoal has been reached
-         *   a) do - while(money < moneyGoal)
-         */
-        System.out.println(getName() + " created with " + money + " and a goal of " + moneyGoal);
-        ArrayList<Stock> stocksInBudget = new ArrayList<>();
-        stocksInBudget = stockMarket.findStocks(budget);
-        System.out.println(getName() + " Budget: " + budget);
-        for (Stock stock : stocksInBudget) {
-            System.out.println(getName() + " Stock: " + stock.getValue());
-        }
-        // ...
+        round.addInvestor();
+        System.out.println(getName() + " created with $" + money + " and a goal of $" + moneyGoal);
 
-        round.investorFinished();
-        round.endRound();
-        stocksInBudget.clear();
+        while (money < moneyGoal) {
+            if(!costPerStock.isEmpty() && !boughtStocks.isEmpty()) {
+                ArrayList<Stock> ownedStocks = new ArrayList<>(costPerStock.keySet());
+                for (Stock stock : ownedStocks) {
+                    if(stock.getValue() > costPerStock.get(stock)) {
+                        sellStock(stock);
+                    }
+                }
+            }
 
-        // loop starts again
-        stocksInBudget = stockMarket.findStocks(budget);
-        System.out.println(getName() + " Budget: " + budget);
-        for (Stock stock : stocksInBudget) {
-            System.out.println(getName() + " Stock: " + stock.getValue());
+            budget = round(money/2);
+            stocksInBudget = stockMarket.findStocks(budget);
+            if(stocksInBudget.size() > 0) {
+                Stock cheapestStock = stocksInBudget.get(0);
+                for (Stock stock : stocksInBudget) {
+                    if(cheapestStock.getValue() > stock.getValue()) {
+                        cheapestStock = stock;
+                    }
+                }
+                buyStock(cheapestStock);
+            }
+
+            round.investorFinished();
+            round.endRound();
+            stocksInBudget.clear();
         }
+
+        System.out.println(getName() + " has reached their goal of $" + moneyGoal + "!");
     }
 }
