@@ -126,23 +126,24 @@ public class Investor extends Thread{
         s.stockRelease();
     }
 
-    public void run() {        
+    public void run() {    
+        round.addInvestor();    
         System.out.println(getName() + " created with $" + money + " and a goal of $" + moneyGoal);
 
         while (money < moneyGoal) {
-            round.addInvestor();
+            budget = round(money/2);
+            stocksInBudget = stockMarket.findStocks(budget);
+            boolean tookAction = false;
+
             if(!costPerStock.isEmpty() && !boughtStocks.isEmpty()) {
                 ArrayList<Stock> ownedStocks = new ArrayList<>(costPerStock.keySet());
                 for (Stock stock : ownedStocks) {
                     if(stock.getValue() > costPerStock.get(stock)) {
                         sellStock(stock);
+                        tookAction = true;
                     }
                 }
-            }
-
-            budget = round(money/2);
-            stocksInBudget = stockMarket.findStocks(budget);
-            if(stocksInBudget.size() > 0) {
+            } else if(stocksInBudget.size() > 0) {
                 Stock cheapestStock = stocksInBudget.get(0);
                 for (Stock stock : stocksInBudget) {
                     if(cheapestStock.getValue() > stock.getValue()) {
@@ -150,6 +151,11 @@ public class Investor extends Thread{
                     }
                 }
                 buyStock(cheapestStock);
+                tookAction = true;
+            } 
+            
+            if(!tookAction) {
+                System.out.println(getName() + " does nothing for this round.");
             }
 
             round.investorFinished();
