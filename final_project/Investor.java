@@ -126,11 +126,11 @@ public class Investor extends Thread{
         s.stockRelease();
     }
 
-    public void run() {
-        round.addInvestor();
+    public void run() {        
         System.out.println(getName() + " created with $" + money + " and a goal of $" + moneyGoal);
 
         while (money < moneyGoal) {
+            round.addInvestor();
             if(!costPerStock.isEmpty() && !boughtStocks.isEmpty()) {
                 ArrayList<Stock> ownedStocks = new ArrayList<>(costPerStock.keySet());
                 for (Stock stock : ownedStocks) {
