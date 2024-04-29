@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 public class Stock {
 
+    /** The name of the Stock object */
     private final String name;
 
     /** Cost of the Stock object */
@@ -114,6 +115,10 @@ public class Stock {
         notifyAll();
     }
 
+    /**
+     * Returns the name of the stock
+     * @return the name of the stock
+     */
     public String getName() {
         return name;
     }
