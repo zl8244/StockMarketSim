@@ -24,6 +24,10 @@ public class Round {
         roundNum = 1;
     }
 
+    /**
+     * Returns the round number
+     * @return the round number
+     */
     public int getRoundNum() {
         return roundNum;
     }
