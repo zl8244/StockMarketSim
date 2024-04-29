@@ -36,6 +36,7 @@ public class Driver {
 
     /**
      * Helper method to handle the user input for setting parameters
+     * Assumes user will input valid non-negative values
      */
     private static void handleUserInput() {
         Scanner scan = new Scanner(System.in);
@@ -115,6 +116,7 @@ public class Driver {
             randomValue = round(randomValue);
             investors[i] = new Investor(name, randomValue, stockMarket, round);
         }
+        System.out.println("Round " + round.getRoundNum());
         for (Investor investor : investors) {
             investor.start();
         }

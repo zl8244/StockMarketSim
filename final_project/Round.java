@@ -9,6 +9,8 @@ public class Round {
     /** Reference to the StockMarket object */
     private final StockMarket stockMarket;
 
+    private volatile int roundNum;
+
     /** 
      * A hashmap of the Investor threads
      * @Key The Investor thread
@@ -18,6 +20,11 @@ public class Round {
 
     public Round(StockMarket stockMarket) {
         this.stockMarket = stockMarket;
+        roundNum = 1;
+    }
+
+    public int getRoundNum() {
+        return roundNum;
     }
     
     /**
@@ -58,6 +65,8 @@ public class Round {
                 investors.replace(thread, 0);
             }
             stockMarket.endRound();
+            roundNum++;
+            System.out.println("Round " + roundNum);
             notifyAll();
         } else {
             try {
