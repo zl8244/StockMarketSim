@@ -9,6 +9,7 @@ public class Round {
     /** Reference to the StockMarket object */
     private final StockMarket stockMarket;
 
+    /** Variable that stores the current round number */
     private volatile int roundNum;
 
     /** 
